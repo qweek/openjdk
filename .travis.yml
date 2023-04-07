@@ -1,0 +1,75 @@
+language: cpp
+
+dist: jammy
+sudo: required
+# as per http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
+
+compiler:
+  - clang
+  - gcc
+
+install:
+  - chmod +x ./install.sh
+  - ./install.sh
+
+# script for build and release via Travis to Bintray
+script:
+  # gradle/buildViaTravis.sh
+  # ./gradlew assemble
+  # ./gradlew infer
+  # ./gradlew eradicate
+  # infer -a infer --fail-on-issue --results-dir ./infer-out -- analyze ./
+  # infer -a eradicate --fail-on-issue --results-dir ./infer-out -- analyze ./
+  ### - gradle clean
+  ### - infer capture -- gradle build
+  # infer analyze --fail-on-issue -a infer
+  # infer analyze --fail-on-issue -a eradicate
+  ### - infer analyze -a infer --print-active-checkers --quiet
+  ### - cat infer-out/bugs.txt
+  ### - infer --default-checkers --check-nullable --bufferoverrun --compute-analytics --eradicate --repeated-calls --suggest-nullable --tracing --uninit --print-active-checkers --quiet
+  ### - cat infer-out/bugs.txt
+  ### - infer analyze -a checkers --print-active-checkers --quiet
+  # infer analyze -a eradicate
+  # - infer --eradicate
+  ## analyze -a checkers --default-checkers --check-nullable --bufferoverrun --compute-analytics --eradicate --repeated-calls --suggest-nullable --tracing --uninit
+  ## infer analyze -a checkers --check-nullable --bufferoverrun --compute-analytics --eradicate --repeated-calls --suggest-nullable --tracing --uninit
+  # infer analyze -a tracing
+  # infer --default-checkers --check-nullable --bufferoverrun --compute-analytics --eradicate --repeated-calls --suggest-nullable --tracing --uninit
+  # --immutable-cast --quandary --racerd
+  # --default-checkers
+  # --annotation-reachability --biabduction --fragment-retains-view --immutable-cast --liveness --printf-args --quandary --racerd --siof
+  # --crashcontext
+  # --threadsafety
+  # infer --version
+  ### - cat infer-out/bugs.txt
+  # cat infer-out/report.json
+  # cat infer-out/report.csv
+  # cat infer-out/toplevel.log
+  # infer analyze --help-full
+  # infer capture --help-full
+  # infer explore --help-full
+  # gradle clean
+  # infer run -- gradle build
+  # cat infer-out/bugs.txt
+  # cat infer-out/report.json
+  # cat infer-out/report.csv
+  # cat infer-out/toplevel.log
+  # infer analyze --fail-on-issue -a checkers
+  ## infer explore --source-preview
+  # infer explore --html
+  # infer --help-full
+  # inferTraceBugs
+  # ls infer-out
+  # - cat infer-out/bugs.txt
+  # - infer analyze -a infer --print-active-checkers --quiet
+  # - infer --default-checkers --check-nullable --bufferoverrun --compute-analytics --eradicate --repeated-calls --suggest-nullable --tracing --uninit --print-active-checkers --quiet
+  ##- infer explore --help-full
+  #- gradle clean
+  #- infer capture -- gradle test
+  #- infer analyze -a checkers --print-active-checkers --quiet && cat infer-out/bugs.txt
+  #- infer --no-default-checkers --bufferoverrun --compute-analytics --eradicate --repeated-calls --suggest-nullable --tracing --print-active-checkers --quiet && cat infer-out/bugs.txt
+  # - infer explore --source-preview
+  - bash configure
+  - infer run -- make images
+  - ./build/*/images/jdk/bin/java -version
+  - cat infer-out/bugs.txt
